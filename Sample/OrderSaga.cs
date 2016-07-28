@@ -6,7 +6,7 @@ using NServiceBus.Logging;
 public class OrderSaga :
     Saga<OrderSagaData>,
     IAmStartedByMessages<StartOrder>,
-    IHandleMessages<CompleteOrder>
+    IHandleMessages<BaseCompleteOrder>
 {
     static ILog log = LogManager.GetLogger<OrderSaga>();
 
@@ -14,7 +14,7 @@ public class OrderSaga :
     {
         mapper.ConfigureMapping<StartOrder>(message => message.OrderId)
                 .ToSaga(sagaData => sagaData.OrderId);
-        mapper.ConfigureMapping<CompleteOrder>(message => message.OrderId)
+        mapper.ConfigureMapping<BaseCompleteOrder>(message => message.OrderId)
                 .ToSaga(sagaData => sagaData.OrderId);
     }
 
@@ -29,7 +29,7 @@ public class OrderSaga :
         return context.SendLocal(completeOrder);
     }
 
-    public Task Handle(CompleteOrder message, IMessageHandlerContext context)
+    public Task Handle(BaseCompleteOrder message, IMessageHandlerContext context)
     {
         log.Info($"Saga with OrderId {Data.OrderId} received CompleteOrder with OrderId {message.OrderId}");
         MarkAsComplete();

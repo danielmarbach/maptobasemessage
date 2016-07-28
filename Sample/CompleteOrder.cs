@@ -1,5 +1,5 @@
 
 public class CompleteOrder :
-    BaseMessage
+    BaseCompleteOrder
 {
 }

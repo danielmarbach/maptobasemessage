@@ -1,6 +1,6 @@
 using NServiceBus;
 
-public class BaseMessage :
+public class BaseCompleteOrder :
     IMessage
 {
     public string OrderId { get; set; }
