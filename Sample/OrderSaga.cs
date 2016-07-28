@@ -6,15 +6,13 @@ using NServiceBus.Logging;
 public class OrderSaga :
     Saga<OrderSagaData>,
     IAmStartedByMessages<StartOrder>,
-    IHandleMessages<BaseCompleteOrder>
+    IHandleMessages<CompleteOrder>
 {
     static ILog log = LogManager.GetLogger<OrderSaga>();
 
     protected override void ConfigureHowToFindSaga(SagaPropertyMapper<OrderSagaData> mapper)
     {
-        mapper.ConfigureMapping<StartOrder>(message => message.OrderId)
-                .ToSaga(sagaData => sagaData.OrderId);
-        mapper.ConfigureMapping<BaseCompleteOrder>(message => message.OrderId)
+        mapper.ConfigureMapping<BaseMessage>(message => message.OrderId)
                 .ToSaga(sagaData => sagaData.OrderId);
     }
 
@@ -29,7 +27,7 @@ public class OrderSaga :
         return context.SendLocal(completeOrder);
     }
 
-    public Task Handle(BaseCompleteOrder message, IMessageHandlerContext context)
+    public Task Handle(CompleteOrder message, IMessageHandlerContext context)
     {
         log.Info($"Saga with OrderId {Data.OrderId} received CompleteOrder with OrderId {message.OrderId}");
         MarkAsComplete();
