@@ -12,8 +12,8 @@ class Program
 
     static async Task AsyncMain()
     {
-        Console.Title = "Samples.ComplexSagaFindingLogic";
-        var endpointConfiguration = new EndpointConfiguration("Samples.ComplexSagaFindingLogic");
+        Console.Title = "BaseMessageMappingV6";
+        var endpointConfiguration = new EndpointConfiguration("BaseMessageMappingV6");
         endpointConfiguration.UseSerialization<JsonSerializer>();
         endpointConfiguration.EnableInstallers();
         endpointConfiguration.UsePersistence<InMemoryPersistence>();
@@ -23,15 +23,11 @@ class Program
             .ConfigureAwait(false);
         try
         {
-            await endpointInstance.SendLocal(new StartOrder
-                          {
-                              OrderId = "123"
-                          })
-                          .ConfigureAwait(false);
-            await endpointInstance.SendLocal(new StartOrder
-                          {
-                              OrderId = "456"
-                          })
+            var startOrder = new StartOrder
+            {
+                OrderId = "123"
+            };
+            await endpointInstance.SendLocal(startOrder)
                           .ConfigureAwait(false);
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
